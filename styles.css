@@ -634,9 +634,74 @@ body {
 
 @keyframes flowing-left-right {
   0% { transform: translateX(0); }
-  100% { transform: translateX(50%); }
+  100% { transform: translateX(30%); }
 }
 
+/* .flowing-images-row {
+  animation: flowing-left-right 13s linear infinite;
+}  */
+
+/* FROM STRIP */
+
+/* Flowing Images Strip Drag-to-Scroll Styles */
 .flowing-images-row {
-  animation: flowing-left-right 19s linear infinite;
+    cursor: grab;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: none; /* Hide scrollbar on Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    animation: flowing-left-right 17s linear infinite;
+    animation-play-state: running;
+}
+
+.flowing-images-row::-webkit-scrollbar {
+    display: none; /* Hide scrollbar on Chrome/Safari */
+}
+
+.flowing-images-row:active {
+    cursor: grabbing;
+}
+
+.flowing-images-row.paused {
+    animation-play-state: paused;
+}
+
+.flowing-images-row img {
+    pointer-events: none; /* Prevent image drag interference */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    /* user-drag: none; */
+}
+
+/* Smooth scrolling container */
+.flowing-images-container {
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    will-change: scroll-position;
+    scroll-snap-type: x proximity;
+}
+
+.flowing-images-container:active {
+    cursor: grabbing;
+}
+
+.flowing-images-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar on Chrome/Safari */
+}
+
+.flowing-images-container {
+    scrollbar-width: none; /* Hide scrollbar on Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
 } 

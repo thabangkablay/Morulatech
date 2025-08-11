@@ -107,3 +107,80 @@ if (heroImageElement) {
         heroImageElement.src = heroImages[heroImageIndex];
     }, 3000);
 } 
+
+
+// From STRIP CHANGES
+
+
+// Drag-to-scroll for Flowing Images Strip (cleaned and optimized)
+document.addEventListener('DOMContentLoaded', function initializeFlowingImagesDrag() {
+    const flowingContainer = document.querySelector('.flowing-images-container');
+    const flowingRow = document.querySelector('.flowing-images-row');
+    if (!flowingContainer || !flowingRow) return;
+
+    // Disable native image dragging for a better UX
+    flowingRow.querySelectorAll('img').forEach((img) => {
+        img.draggable = false;
+    });
+
+    const DRAG_SENSITIVITY = 2.1; // higher = faster horizontal movement
+    let isDragging = false;
+    let dragStartClientX = 0;
+    let dragStartScrollLeft = 0;
+    let rafId = null;
+
+    function setCursor(grabbing) {
+        flowingContainer.style.cursor = grabbing ? 'grabbing' : 'grab';
+    }
+
+    function pauseAnimation() {
+        flowingRow.classList.add('paused');
+    }
+
+    function resumeAnimation() {
+        flowingRow.classList.remove('paused');
+    }
+
+    function scheduleScroll(nextClientX) {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+            const deltaX = (nextClientX - dragStartClientX) * DRAG_SENSITIVITY;
+            flowingContainer.scrollLeft = dragStartScrollLeft - deltaX;
+        });
+    }
+
+    function onPointerDown(event) {
+        isDragging = true;
+        setCursor(true);
+        pauseAnimation();
+        dragStartClientX = event.clientX;
+        dragStartScrollLeft = flowingContainer.scrollLeft;
+        if (flowingContainer.setPointerCapture) {
+            try { flowingContainer.setPointerCapture(event.pointerId); } catch (_) {}
+        }
+    }
+
+    function onPointerMove(event) {
+        if (!isDragging) return;
+        scheduleScroll(event.clientX);
+    }
+
+    function onPointerUpOrCancel() {
+        if (!isDragging) return;
+        isDragging = false;
+        setCursor(false);
+        resumeAnimation();
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+    }
+
+    flowingContainer.addEventListener('pointerdown', onPointerDown);
+    flowingContainer.addEventListener('pointermove', onPointerMove);
+    flowingContainer.addEventListener('pointerup', onPointerUpOrCancel);
+    flowingContainer.addEventListener('pointerleave', onPointerUpOrCancel);
+    flowingContainer.addEventListener('pointercancel', onPointerUpOrCancel);
+
+    setCursor(false);
+});
